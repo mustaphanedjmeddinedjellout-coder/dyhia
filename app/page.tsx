@@ -499,6 +499,41 @@ export default function HomePage() {
             <p className="text-sm text-mocha/60 mb-5">تأكيد الطلب في أقل من دقيقتين ✓</p>
 
             <form className="space-y-5" onSubmit={handleSubmit} noValidate>
+              {/* Delivery type */}
+              <div>
+                <label className="text-sm font-medium text-mocha/80 mb-3 block">نوع التوصيل</label>
+                <div className="grid grid-cols-2 gap-3">
+                  {([[["home", "🏠", "إلى باب المنزل", "أسرع وأريح"], ["stop", "🏪", "الى المكتب", "أوفر في التكلفة"]]] as const).map(([val, icon, label, sub]) => (
+                    <button
+                      key={val}
+                      type="button"
+                      onClick={() => {
+                        setForm((p) => ({
+                          ...p,
+                          deliveryType: val,
+                          communeId: p.deliveryType === val ? p.communeId : "",
+                          baladiya: p.deliveryType === val ? p.baladiya : "",
+                          stopdeskId:
+                            val === "stop" && p.deliveryType === "stop" ? p.stopdeskId : ""
+                        }));
+                        setErrors((p) => ({
+                          ...p,
+                          deliveryType: "",
+                          communeId: "",
+                          baladiya: "",
+                          stopdeskId: ""
+                        }));
+                      }}
+                      className={`rounded-2xl border-2 p-4 text-right transition active:scale-95 ${form.deliveryType === val ? "border-mocha bg-mocha text-white" : "border-dune bg-sand/50 text-mocha"}`}>
+                      <div className="text-2xl mb-1">{icon}</div>
+                      <div className="text-sm font-semibold">{label}</div>
+                      <div className={`text-xs mt-0.5 ${form.deliveryType === val ? "text-white/70" : "text-mocha/50"}`}>{sub}</div>
+                    </button>
+                  ))}
+                </div>
+                {errors.deliveryType && <p className={errCls}>{errors.deliveryType}</p>}
+              </div>
+
               {/* Name */}
               <div>
                 <label className="text-sm font-medium text-mocha/80">الاسم واللقب</label>
@@ -644,41 +679,6 @@ export default function HomePage() {
                   enterKeyHint="next"
                 />
                 {errors.address && <p className={errCls}>{errors.address}</p>}
-              </div>
-
-              {/* Delivery type */}
-              <div>
-                <label className="text-sm font-medium text-mocha/80 mb-3 block">نوع التوصيل</label>
-                <div className="grid grid-cols-2 gap-3">
-                  {([["home", "🏠", "إلى باب المنزل", "أسرع وأريح"], ["stop", "🏪", "الى المكتب", "أوفر في التكلفة"]] as const).map(([val, icon, label, sub]) => (
-                    <button
-                      key={val}
-                      type="button"
-                      onClick={() => {
-                        setForm((p) => ({
-                          ...p,
-                          deliveryType: val,
-                          communeId: p.deliveryType === val ? p.communeId : "",
-                          baladiya: p.deliveryType === val ? p.baladiya : "",
-                          stopdeskId:
-                            val === "stop" && p.deliveryType === "stop" ? p.stopdeskId : ""
-                        }));
-                        setErrors((p) => ({
-                          ...p,
-                          deliveryType: "",
-                          communeId: "",
-                          baladiya: "",
-                          stopdeskId: ""
-                        }));
-                      }}
-                      className={`rounded-2xl border-2 p-4 text-right transition active:scale-95 ${form.deliveryType === val ? "border-mocha bg-mocha text-white" : "border-dune bg-sand/50 text-mocha"}`}>
-                      <div className="text-2xl mb-1">{icon}</div>
-                      <div className="text-sm font-semibold">{label}</div>
-                      <div className={`text-xs mt-0.5 ${form.deliveryType === val ? "text-white/70" : "text-mocha/50"}`}>{sub}</div>
-                    </button>
-                  ))}
-                </div>
-                {errors.deliveryType && <p className={errCls}>{errors.deliveryType}</p>}
               </div>
 
               {/* Stop Desk center */}

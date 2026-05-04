@@ -134,13 +134,21 @@ export default function HomePage() {
         return;
       }
 
+      if (form.deliveryType !== "home" && form.deliveryType !== "stop") {
+        return;
+      }
+
       const wilayaId = Number(form.wilayaId);
       if (!Number.isFinite(wilayaId) || wilayaId <= 0) {
         return;
       }
 
       try {
-        const res = await fetch(`/api/yalidine/communes?wilayaId=${wilayaId}`, { cache: "no-store" });
+        const onlyWithCenters = form.deliveryType === "stop";
+        const res = await fetch(
+          `/api/yalidine/communes?wilayaId=${wilayaId}&onlyWithCenters=${onlyWithCenters ? "1" : "0"}`,
+          { cache: "no-store" }
+        );
         if (!res.ok) {
           throw new Error("communes");
         }
@@ -159,7 +167,7 @@ export default function HomePage() {
       cancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [form.wilayaId, geoMode]);
+  }, [form.wilayaId, form.deliveryType, geoMode]);
 
   useEffect(() => {
     let cancelled = false;
@@ -587,10 +595,16 @@ export default function HomePage() {
                       }}
                       className={inputCls}
                       autoComplete="address-level2"
-                      disabled={!form.wilayaId || communeOptions === null}
+                      disabled={!form.deliveryType || !form.wilayaId || communeOptions === null}
                     >
                       <option value="">
-                        {!form.wilayaId ? "اختاري الولاية أولاً" : communeOptions === null ? "...تحميل" : "اختاري بلديتك"}
+                        {!form.deliveryType
+                          ? "اختاري نوع التوصيل أولاً"
+                          : !form.wilayaId
+                            ? "اختاري الولاية أولاً"
+                            : communeOptions === null
+                              ? "...تحميل"
+                              : "اختاري بلديتك"}
                       </option>
                       {(communeOptions ?? []).map((c) => (
                         <option key={c.id} value={String(c.id)}>
@@ -636,13 +650,26 @@ export default function HomePage() {
               <div>
                 <label className="text-sm font-medium text-mocha/80 mb-3 block">نوع التوصيل</label>
                 <div className="grid grid-cols-2 gap-3">
-                  {([["home", "🏠", "إلى باب المنزل", "أسرع وأريح"], ["stop", "🏪", "Stop Desk", "أوفر في التكلفة"]] as const).map(([val, icon, label, sub]) => (
+                  {([["home", "🏠", "إلى باب المنزل", "أسرع وأريح"], ["stop", "🏪", "الى المكتب", "أوفر في التكلفة"]] as const).map(([val, icon, label, sub]) => (
                     <button
                       key={val}
                       type="button"
                       onClick={() => {
-                        set("deliveryType", val);
-                        if (val !== "stop") set("stopdeskId", "");
+                        setForm((p) => ({
+                          ...p,
+                          deliveryType: val,
+                          communeId: p.deliveryType === val ? p.communeId : "",
+                          baladiya: p.deliveryType === val ? p.baladiya : "",
+                          stopdeskId:
+                            val === "stop" && p.deliveryType === "stop" ? p.stopdeskId : ""
+                        }));
+                        setErrors((p) => ({
+                          ...p,
+                          deliveryType: "",
+                          communeId: "",
+                          baladiya: "",
+                          stopdeskId: ""
+                        }));
                       }}
                       className={`rounded-2xl border-2 p-4 text-right transition active:scale-95 ${form.deliveryType === val ? "border-mocha bg-mocha text-white" : "border-dune bg-sand/50 text-mocha"}`}>
                       <div className="text-2xl mb-1">{icon}</div>

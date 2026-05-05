@@ -503,7 +503,7 @@ export default function HomePage() {
               <div>
                 <label className="text-sm font-medium text-mocha/80 mb-3 block">نوع التوصيل</label>
                 <div className="grid grid-cols-2 gap-3">
-                  {([[["home", "🏠", "إلى باب المنزل", "أسرع وأريح"], ["stop", "🏪", "الى المكتب", "أوفر في التكلفة"]]] as const).map(([val, icon, label, sub]) => (
+                    {([["home", "🏠", "إلى باب المنزل", "أسرع وأريح"], ["stop", "🏪", "الى المكتب", "أوفر في التكلفة"]] as const).map(([val, icon, label, sub]) => (
                     <button
                       key={val}
                       type="button"

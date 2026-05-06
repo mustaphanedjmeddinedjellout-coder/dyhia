@@ -756,6 +756,15 @@ export default function HomePage() {
                 {errors.color && <p className={errCls}>{errors.color}</p>}
               </div>
 
+              {/* Size */}
+              <div>
+                <label className="text-sm font-medium text-mocha/80">المقاس</label>
+                <div className="mt-2 rounded-2xl border border-dune bg-sand/60 px-4 py-3 text-sm text-mocha flex items-center justify-between">
+                  <span className="font-semibold text-cocoa">Taille standard (38-50)</span>
+                  <span className="text-xs text-mocha/60">مقاس واحد</span>
+                </div>
+              </div>
+
               {/* Order summary inline */}
               <div className="rounded-2xl bg-blush border border-dune/40 p-4 space-y-2 text-sm">
                 <div className="flex justify-between text-mocha/80">

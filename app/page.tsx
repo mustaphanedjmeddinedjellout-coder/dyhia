@@ -567,7 +567,7 @@ export default function HomePage() {
               {/* Name */}
               <div>
                 <label className="text-sm font-medium text-mocha/80">الاسم واللقب</label>
-                <input ref={nameRef} type="text" value={form.fullName} onChange={e => set("fullName", e.target.value)} className={inputCls} placeholder="اكتبي اسمك هنا" autoComplete="name" enterKeyHint="next" />
+                <input ref={nameRef} type="text" value={form.fullName} onChange={e => set("fullName", e.target.value)} className={inputCls} placeholder="اكتبي اسمك هنا" autoComplete="name" enterKeyHint="next" dir="auto" />
                 {errors.fullName && <p className={errCls}>{errors.fullName}</p>}
               </div>
 

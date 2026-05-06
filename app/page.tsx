@@ -47,6 +47,24 @@ function Stars({ n = 5 }: { n?: number }) {
   return <span className="text-gold">{Array.from({ length: n }).map((_, i) => <span key={i}>★</span>)}</span>;
 }
 
+function trackMetaPixel(eventName: string, parameters?: Record<string, unknown>) {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  const fbq = (window as Window & { fbq?: (...args: any[]) => void }).fbq;
+  if (typeof fbq !== "function") {
+    return;
+  }
+
+  if (parameters) {
+    fbq("track", eventName, parameters);
+    return;
+  }
+
+  fbq("track", eventName);
+}
+
 export default function HomePage() {
   const [form, setForm] = useState<FormState>({
     fullName: "",
@@ -354,6 +372,12 @@ export default function HomePage() {
           }
         }
       }
+      trackMetaPixel("Purchase", {
+        value: totalPrice,
+        currency: "DZD",
+        content_name: "روبة تونسية",
+        content_type: "product"
+      });
       setSuccess(true);
       setForm({ fullName: "", phone: "", wilaya: "", wilayaId: "", baladiya: "", communeId: "", address: "", deliveryType: "", stopdeskId: "", color: "" });
     } catch {

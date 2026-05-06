@@ -31,21 +31,31 @@ const DEMO_COMMUNES: Record<string, Array<{ id: number; name: string }>> = {
   ],
 };
 
+const DEMO_STOPDESK_COMMUNE_IDS = new Set([1601, 1602, 2601, 3101]);
+
 export async function GET(req: Request) {
   const url = new URL(req.url);
   const wilayaId = Number(url.searchParams.get("wilayaId") || "");
+  const onlyWithCenters = ["1", "true", "yes"].includes(
+    String(url.searchParams.get("onlyWithCenters") || "").toLowerCase()
+  );
 
   if (!Number.isFinite(wilayaId) || wilayaId <= 0) {
     return NextResponse.json({ error: "Missing wilayaId" }, { status: 400 });
   }
 
   try {
-    const communes = await listYalidineCommunes(wilayaId);
+    const communes = await listYalidineCommunes(wilayaId, {
+      hasStopDesk: onlyWithCenters
+    });
     return NextResponse.json({ communes });
   } catch (e: any) {
     // Fallback: provide demo communes if Yalidine is not configured
     if (String(e?.message || "").includes("not configured")) {
-      const demoCommunes = DEMO_COMMUNES[String(wilayaId)] || [];
+      let demoCommunes = DEMO_COMMUNES[String(wilayaId)] || [];
+      if (onlyWithCenters) {
+        demoCommunes = demoCommunes.filter((c) => DEMO_STOPDESK_COMMUNE_IDS.has(c.id));
+      }
       return NextResponse.json({ communes: demoCommunes });
     }
     return NextResponse.json(

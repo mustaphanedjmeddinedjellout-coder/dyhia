@@ -8,6 +8,7 @@ export type YalidineCommune = {
   wilaya_id: number;
   name: string;
   wilaya_name?: string;
+  has_stop_desk?: boolean;
 };
 
 export type YalidineCenter = {
@@ -213,10 +214,18 @@ export async function listYalidineWilayas(): Promise<YalidineWilaya[]> {
     .filter((w) => Number.isFinite(w.id) && w.id > 0 && w.name);
 }
 
-export async function listYalidineCommunes(wilayaId: number): Promise<YalidineCommune[]> {
+export async function listYalidineCommunes(
+  wilayaId: number,
+  options?: {
+    hasStopDesk?: boolean;
+  }
+): Promise<YalidineCommune[]> {
   const cfg = getConfig();
   const raw = await yalidineFetch<unknown>(cfg.communesPath, {
-    query: { wilaya_id: wilayaId },
+    query: {
+      wilaya_id: wilayaId,
+      has_stop_desk: options?.hasStopDesk ? true : undefined
+    },
     cache: "force-cache",
     next: { revalidate: 60 * 60 * 24 }
   });
@@ -236,7 +245,13 @@ export async function listYalidineCommunes(wilayaId: number): Promise<YalidineCo
       id: Number(item.id ?? item.commune_id ?? item.code ?? item.value),
       wilaya_id: Number(item.wilaya_id ?? wilayaId),
       name: String(item.name ?? item.label ?? item.commune_name ?? "").trim(),
-      wilaya_name: item.wilaya_name ? String(item.wilaya_name).trim() : undefined
+      wilaya_name: item.wilaya_name ? String(item.wilaya_name).trim() : undefined,
+      has_stop_desk:
+        typeof item.has_stop_desk === "boolean"
+          ? item.has_stop_desk
+          : item.has_stop_desk === undefined || item.has_stop_desk === null
+            ? undefined
+            : Boolean(Number(item.has_stop_desk))
     }))
     .filter((c) => Number.isFinite(c.id) && c.id > 0 && c.name);
 }

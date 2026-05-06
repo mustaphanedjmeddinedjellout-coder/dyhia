@@ -397,7 +397,7 @@ export default function HomePage() {
         <div className="mt-6 animate-fade-up space-y-4">
           <p className="text-xs tracking-widest text-mocha/60 uppercase">أناقة ستور</p>
           <h1 className="text-3xl sm:text-4xl font-bold text-cocoa leading-snug" style={{ fontFamily: "var(--font-tajawal)" }}>
-            روبة تونسية تمهل...<br />أناقة وراحة في لبسة وحدة!
+            روبة تونسية تهببل...<br />أناقة وراحة في لبسة وحدة!
           </h1>
           <p className="text-base text-mocha/75 leading-relaxed">
             تألقي بأجمل طلة مع هذه الروبة التونسية المطرزة بالذهبي، قماش بارد ومريح ومتوفر بثلاث ألوان شبابة.
@@ -592,7 +592,7 @@ export default function HomePage() {
                       <option value="">{loadingGeo ? "...تحميل" : "اختاري ولايتك"}</option>
                       {(wilayaOptions ?? []).map((w) => (
                         <option key={w.id} value={String(w.id)}>
-                          {w.name}
+                          {w.name} ({Number(w.id)})
                         </option>
                       ))}
                     </select>
@@ -605,9 +605,9 @@ export default function HomePage() {
                       autoComplete="address-level1"
                     >
                       <option value="">اختاري ولايتك</option>
-                      {WILAYAS.map((w) => (
+                      {WILAYAS.map((w, i) => (
                         <option key={w} value={w}>
-                          {w}
+                          {w} ({i + 1})
                         </option>
                       ))}
                     </select>

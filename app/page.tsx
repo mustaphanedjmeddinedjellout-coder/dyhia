@@ -377,19 +377,55 @@ export default function HomePage() {
             <div className="absolute top-4 right-4 z-10 bg-gold text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
               جديد ✨
             </div>
-            <Img
-              src={heroColor.image}
-              fallback={heroColor.fallback}
-              alt={`روبة تونسية - ${heroColor.name}`}
-              className="w-full object-cover aspect-[4/5] sm:aspect-[16/9]"
-              priority
-            />
-            {/* Color indicator */}
-            <div className="flex items-center gap-2 px-5 py-3 border-t border-dune/40">
-              <span className="h-4 w-4 rounded-full border-2 border-white shadow-sm" style={{ background: heroColor.swatch }} />
-              <span className="text-sm text-mocha/80">{heroColor.name}</span>
-              <span className="mr-auto text-xs text-mocha/50">انقري على لون للتغيير</span>
-            </div>
+            {form.color ? (
+              <>
+                <Img
+                  src={heroColor.image}
+                  fallback={heroColor.fallback}
+                  alt={`روبة تونسية - ${heroColor.name}`}
+                  className="w-full object-cover aspect-[4/5] sm:aspect-[16/9]"
+                  priority
+                />
+                {/* Color indicator */}
+                <div className="flex items-center gap-2 px-5 py-3 border-t border-dune/40">
+                  <span className="h-4 w-4 rounded-full border-2 border-white shadow-sm" style={{ background: heroColor.swatch }} />
+                  <span className="text-sm text-mocha/80">{heroColor.name}</span>
+                  <span className="mr-auto text-xs text-mocha/50">انقري على لون للتغيير</span>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="grid grid-cols-3 gap-2 p-2 sm:p-3">
+                  {COLORS.map((c) => (
+                    <button
+                      key={c.id}
+                      type="button"
+                      onClick={() => pickColor(c.id)}
+                      className="relative overflow-hidden rounded-2xl border border-dune/40 bg-white transition active:scale-95 focus:outline-none"
+                    >
+                      <Img
+                        src={c.image}
+                        fallback={c.fallback}
+                        alt={`روبة تونسية - ${c.name}`}
+                        className="w-full object-cover aspect-[3/4]"
+                      />
+                      <div className="absolute bottom-2 right-2 rounded-full bg-white/90 px-2 py-0.5 text-[10px] font-semibold text-cocoa">
+                        {c.name.split(" ")[0]}
+                      </div>
+                    </button>
+                  ))}
+                </div>
+                <div className="flex items-center gap-2 px-5 py-3 border-t border-dune/40">
+                  <div className="flex items-center gap-1">
+                    {COLORS.map((c) => (
+                      <span key={c.id} className="h-4 w-4 rounded-full border-2 border-white shadow-sm" style={{ background: c.swatch }} />
+                    ))}
+                  </div>
+                  <span className="text-sm text-mocha/80">3 ألوان متاحة</span>
+                  <span className="mr-auto text-xs text-mocha/50">اختاري اللون اللي يعجبك</span>
+                </div>
+              </>
+            )}
           </div>
         </div>
 

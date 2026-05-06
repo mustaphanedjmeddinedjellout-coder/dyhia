@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 import { getYalidineShippingQuote } from "@/lib/yalidine";
 
-// Demo/fallback fees (used when Yalidine is not configured)
+// Demo/fallback fees (used when Yalidine is not configured) — use -100 as fallback
 const DEMO_FEES: Record<string, { home: number; stop: number }> = {
-  "1": { home: 800, stop: 600 },   // أدرار
-  "16": { home: 400, stop: 300 },  // الجزائر
-  "26": { home: 1200, stop: 900 }, // قسنطينة
-  "31": { home: 1500, stop: 1100 },// وهران
+  "1": { home: -100, stop: -100 },   // أدرار
+  "16": { home: -100, stop: -100 },  // الجزائر
+  "26": { home: -100, stop: -100 }, // قسنطينة
+  "31": { home: -100, stop: -100 },// وهران
 };
 
 export async function GET(req: Request) {
@@ -52,19 +52,17 @@ export async function GET(req: Request) {
     const message = e?.message || "";
     if (message.includes("not configured")) {
       const fees = DEMO_FEES[String(wilayaId)];
-      if (fees) {
-        const price = deliveryType === "home" ? fees.home : fees.stop;
-        return NextResponse.json({
-          quote: {
-            deliveryType,
-            price,
-            currency: "DZD",
-            baseFee: price,
-            overweightFee: 0,
-            billableWeightKg: 1
-          }
-        });
-      }
+      const price = fees ? (deliveryType === "home" ? fees.home : fees.stop) : -100;
+      return NextResponse.json({
+        quote: {
+          deliveryType,
+          price,
+          currency: "DZD",
+          baseFee: price,
+          overweightFee: 0,
+          billableWeightKg: 1
+        }
+      });
     }
     return NextResponse.json(
       { error: e?.message || "Failed to fetch shipping" },

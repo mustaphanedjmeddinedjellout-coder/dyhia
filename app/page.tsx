@@ -356,7 +356,7 @@ export default function HomePage() {
                 )?.name ?? null
               : null,
           address: form.address,
-          delivery_fee: deliveryFee ?? null,
+          delivery_fee: deliveryFee ?? -100,
           total_price: Number.isFinite(totalPrice) ? totalPrice : null
         };
 

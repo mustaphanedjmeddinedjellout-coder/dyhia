@@ -144,11 +144,9 @@ export default function HomePage() {
       }
 
       try {
-        const onlyWithCenters = form.deliveryType === "stop";
-        const res = await fetch(
-          `/api/yalidine/communes?wilayaId=${wilayaId}&onlyWithCenters=${onlyWithCenters ? "1" : "0"}`,
-          { cache: "no-store" }
-        );
+        const res = await fetch(`/api/yalidine/communes?wilayaId=${wilayaId}`, {
+          cache: "no-store"
+        });
         if (!res.ok) {
           throw new Error("communes");
         }

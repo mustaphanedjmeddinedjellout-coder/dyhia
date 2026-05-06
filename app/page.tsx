@@ -88,7 +88,13 @@ export default function HomePage() {
     if (focus) setTimeout(() => nameRef.current?.focus(), 250);
   };
 
-  const pickColor = (id: string) => { set("color", id); setSuccess(false); goToOrder(true); };
+  const pickColor = (id: string, options?: { scroll?: boolean }) => {
+    set("color", id);
+    setSuccess(false);
+    if (options?.scroll) {
+      goToOrder(true);
+    }
+  };
 
   const deliveryFee = quote?.price ?? null;
   const totalPrice = (deliveryFee ?? 0) + PRICE;
@@ -470,7 +476,7 @@ export default function HomePage() {
               <button
                 key={c.id}
                 type="button"
-                onClick={() => pickColor(c.id)}
+                onClick={() => pickColor(c.id, { scroll: true })}
                 style={{ animationDelay: `${i * 0.1}s` }}
                 className={`text-right rounded-2xl bg-white overflow-hidden shadow-soft transition-all active:scale-95 focus:outline-none ${form.color === c.id ? "ring-gold scale-[1.03]" : "border border-dune/40"}`}
               >

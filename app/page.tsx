@@ -37,6 +37,9 @@ type ShippingQuote = { price: number };
 
 function Img({ src, fallback, alt, className, priority }: { src: string; fallback: string; alt: string; className?: string; priority?: boolean; }) {
   const [s, setS] = useState(src);
+  useEffect(() => {
+    setS(src);
+  }, [src]);
   return <img src={s} alt={alt} className={className} loading={priority ? "eager" : "lazy"} fetchPriority={priority ? "high" : "auto"} onError={() => s !== fallback && setS(fallback)} />;
 }
 

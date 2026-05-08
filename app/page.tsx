@@ -76,7 +76,7 @@ export default function HomePage() {
     address: "",
     deliveryType: "home",
     stopdeskId: "",
-    color: ""
+    color: "red"
   });
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitting, setSubmitting] = useState(false);
@@ -374,7 +374,7 @@ export default function HomePage() {
         content_type: "product"
       });
       setSuccess(true);
-      setForm({ fullName: "", phone: "", wilaya: "", wilayaId: "", baladiya: "", communeId: "", address: "", deliveryType: "home", stopdeskId: "", color: "" });
+      setForm({ fullName: "", phone: "", wilaya: "", wilayaId: "", baladiya: "", communeId: "", address: "", deliveryType: "home", stopdeskId: "", color: "red" });
     } catch {
       setSubmitError("حدث خطأ أثناء الإرسال، يرجى المحاولة مرة أخرى.");
     } finally {

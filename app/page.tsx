@@ -74,7 +74,7 @@ export default function HomePage() {
     baladiya: "",
     communeId: "",
     address: "",
-    deliveryType: "",
+    deliveryType: "home",
     stopdeskId: "",
     color: ""
   });
@@ -309,11 +309,6 @@ export default function HomePage() {
     } else {
       if (!form.baladiya.trim()) e.baladiya = "البلدية مطلوبة.";
     }
-    if (!form.address.trim()) e.address = "العنوان مطلوب.";
-    if (!form.deliveryType) e.deliveryType = "الرجاء اختيار نوع التوصيل.";
-    if (geoMode === "api" && form.deliveryType === "stop" && !form.stopdeskId) {
-      e.stopdeskId = "الرجاء اختيار مركز Stop Desk.";
-    }
     if (!form.color) e.color = "الرجاء اختيار اللون.";
     setErrors(e);
     if (e.fullName) nameRef.current?.focus();
@@ -379,7 +374,7 @@ export default function HomePage() {
         content_type: "product"
       });
       setSuccess(true);
-      setForm({ fullName: "", phone: "", wilaya: "", wilayaId: "", baladiya: "", communeId: "", address: "", deliveryType: "", stopdeskId: "", color: "" });
+      setForm({ fullName: "", phone: "", wilaya: "", wilayaId: "", baladiya: "", communeId: "", address: "", deliveryType: "home", stopdeskId: "", color: "" });
     } catch {
       setSubmitError("حدث خطأ أثناء الإرسال، يرجى المحاولة مرة أخرى.");
     } finally {
@@ -553,41 +548,6 @@ export default function HomePage() {
             <p className="text-sm text-mocha/60 mb-5">تأكيد الطلب في أقل من دقيقتين ✓</p>
 
             <form className="space-y-5" onSubmit={handleSubmit} noValidate>
-              {/* Delivery type */}
-              <div>
-                <label className="text-sm font-medium text-mocha/80 mb-3 block">نوع التوصيل</label>
-                <div className="grid grid-cols-2 gap-3">
-                    {([["home", "🏠", "إلى باب المنزل", "أسرع وأريح"], ["stop", "🏪", "الى المكتب", "أوفر في التكلفة"]] as const).map(([val, icon, label, sub]) => (
-                    <button
-                      key={val}
-                      type="button"
-                      onClick={() => {
-                        setForm((p) => ({
-                          ...p,
-                          deliveryType: val,
-                          communeId: p.deliveryType === val ? p.communeId : "",
-                          baladiya: p.deliveryType === val ? p.baladiya : "",
-                          stopdeskId:
-                            val === "stop" && p.deliveryType === "stop" ? p.stopdeskId : ""
-                        }));
-                        setErrors((p) => ({
-                          ...p,
-                          deliveryType: "",
-                          communeId: "",
-                          baladiya: "",
-                          stopdeskId: ""
-                        }));
-                      }}
-                      className={`rounded-2xl border-2 p-4 text-right transition active:scale-95 ${form.deliveryType === val ? "border-mocha bg-mocha text-white" : "border-dune bg-sand/50 text-mocha"}`}>
-                      <div className="text-2xl mb-1">{icon}</div>
-                      <div className="text-sm font-semibold">{label}</div>
-                      <div className={`text-xs mt-0.5 ${form.deliveryType === val ? "text-white/70" : "text-mocha/50"}`}>{sub}</div>
-                    </button>
-                  ))}
-                </div>
-                {errors.deliveryType && <p className={errCls}>{errors.deliveryType}</p>}
-              </div>
-
               {/* Name */}
               <div>
                 <label className="text-sm font-medium text-mocha/80">الاسم واللقب</label>
@@ -719,21 +679,7 @@ export default function HomePage() {
                 </div>
               </div>
 
-              {/* Address */}
-              <div>
-                <label className="text-sm font-medium text-mocha/80">العنوان بالتفصيل</label>
-                <input
-                  ref={addressRef}
-                  type="text"
-                  value={form.address}
-                  onChange={(e) => set("address", e.target.value)}
-                  className={inputCls}
-                  placeholder="الحي، الشارع، رقم المنزل..."
-                  autoComplete="street-address"
-                  enterKeyHint="next"
-                />
-                {errors.address && <p className={errCls}>{errors.address}</p>}
-              </div>
+
 
               {/* Stop Desk center */}
               {geoMode === "api" && form.deliveryType === "stop" && (
